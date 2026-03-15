@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SMP Global | Import & Export Solutions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #d71920;
+      --blue: #0f5db8;
+      --navy: #071b34;
+      --white: #ffffff;
+      --light: #f5f8fc;
+      --gray: #6b7280;
+      --dark: #0b1220;
+      --shadow: 0 20px 60px rgba(7, 27, 52, 0.14);
+      --radius: 24px;
+      --max: 1240px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      color: var(--dark);
+      background: linear-gradient(180deg, #ffffff 0%, #f7faff 100%);
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    .container { width: min(var(--max), calc(100% - 32px)); margin: 0 auto; }
+
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 1000;
+      backdrop-filter: blur(14px);
+      background: rgba(255,255,255,0.82);
+      border-bottom: 1px solid rgba(15,93,184,0.08);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 82px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      padding: 6px;      
+      display: grid;
+      place-items: center;
+      animation: floatLogo 6s ease-in-out infinite;
+    }
+
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 18px rgba(255,255,255,0.22));
+    }
+
+    .brand h1 {
+      font-size: 1rem;
+      line-height: 1.2;
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      font-size: 0.78rem;
+      color: var(--gray);
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .menu a:hover { color: var(--blue); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lang-toggle, .cta-btn, .ghost-btn {
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+    }
+
+    .lang-toggle {
+      padding: 12px 16px;
+      background: linear-gradient(135deg, var(--red), var(--blue));
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(15,93,184,0.22);
+    }
+
+    .cta-btn {
+      padding: 14px 20px;
+      background: linear-gradient(135deg, var(--red), #ff4b4b);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(215,25,32,0.22);
+    }
+
+    .ghost-btn {
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .lang-toggle:hover, .cta-btn:hover, .ghost-btn:hover, .floating-contact a:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      position: relative;
+      padding: 146px 0 90px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(215,25,32,0.20), transparent 25%),
+        radial-gradient(circle at 80% 10%, rgba(15,93,184,0.28), transparent 25%),
+        linear-gradient(135deg, #030916 0%, #071b34 45%, #0b2446 100%);
+      color: #fff;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(50px);
+      opacity: .35;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      width: 220px;
+      height: 220px;
+      background: var(--red);
+      top: 70px;
+      left: -70px;
+      animation: blobMove 12s ease-in-out infinite;
+    }
+
+    .hero::after {
+      width: 260px;
+      height: 260px;
+      background: var(--blue);
+      right: -80px;
+      bottom: 40px;
+      animation: blobMove 14s ease-in-out infinite reverse;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      font-size: .84rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 16px;
+    }
+
+    .hero h2 {
+      font-size: clamp(2.5rem, 5vw, 4.7rem);
+      line-height: 1.04;
+      margin: 0 0 20px;
+      letter-spacing: -0.04em;
+      max-width: 780px;
+    }
+
+    .hero p {
+      font-size: 1.08rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.82);
+      max-width: 720px;
+      margin: 0 0 28px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 14px;
+      max-width: 780px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.7rem;
+      margin-bottom: 8px;
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo-orbit {
+      position: relative;
+      width: min(90vw, 520px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .ring,
+    .ring-2,
+    .ring-3 {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: inset 0 0 40px rgba(255,255,255,0.04), 0 0 28px rgba(255,255,255,0.06);
+    }
+
+    .ring { width: 100%; height: 100%; animation: spin 18s linear infinite; }
+    .ring-2 { width: 84%; height: 84%; animation: spinReverse 14s linear infinite; }
+    .ring-3 { width: 68%; height: 68%; animation: spin 10s linear infinite; }
+
+    .logo-core {
+      width: 68%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 35%, rgba(255,255,255,0.98), rgba(180,192,220,0.78) 28%, rgba(12,18,32,0.12) 62%, rgba(255,255,255,0.02) 70%),
+                  linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.02));
+      display: grid;
+      place-items: center;
+      box-shadow:
+        0 0 0 16px rgba(255,255,255,0.04),
+        0 0 60px rgba(15,93,184,0.22),
+        0 0 85px rgba(215,25,32,0.18);
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+
+    .logo-shell {
+      width: 74%;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      animation: spin 16s linear infinite;
+      filter: drop-shadow(0 0 26px rgba(255,255,255,0.14)) drop-shadow(0 0 34px rgba(15,93,184,0.22));
+    }
+
+    .logo-shell img {
+      width: 100%;
+      object-fit: contain;
+    }
+
+    .mini-chip {
+      position: absolute;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      font-size: .82rem;
+      color: rgba(255,255,255,0.88);
+      animation: floatY 4s ease-in-out infinite;
+    }
+
+    .mini-chip.one { top: 14%; left: 0; }
+    .mini-chip.two { top: 12%; right: 4%; animation-delay: .8s; }
+    .mini-chip.three { bottom: 16%; left: 2%; animation-delay: 1.2s; }
+    .mini-chip.four { bottom: 12%; right: 0; animation-delay: 1.7s; }
+
+    section { padding: 88px 0; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 34px;
+    }
+
+    .section-head h3 {
+      font-size: clamp(1.9rem, 4vw, 3.1rem);
+      margin: 0 0 12px;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 720px;
+      color: var(--gray);
+      line-height: 1.8;
+    }
+
+    .about-grid, .services-grid, .testimonial-grid, .contact-grid, .footer-grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .about-grid {
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(7,27,52,0.05);
+    }
+
+    .card.dark {
+      color: #fff;
+      background: linear-gradient(135deg, #071b34, #0f5db8 70%, #1a75d4);
+    }
+
+    .card h4 {
+      margin: 0 0 12px;
+      font-size: 1.4rem;
+    }
+
+    .card p {
+      margin: 0;
+      line-height: 1.8;
+      color: inherit;
+      opacity: .92;
+    }
+
+    .bullet-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .bullet-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .bullet-icon {
+      flex: 0 0 44px;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(215,25,32,0.12), rgba(15,93,184,0.14));
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .services-grid {
+      grid-template-columns: repeat(3, minmax(0,1fr));
+    }
+
+    .service-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -30% -38% auto;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(15,93,184,0.12), transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .service-card .tag {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      background: rgba(15,93,184,0.08);
+      color: var(--blue);
+    }
+
+    .country-strip-wrap {
+      overflow: hidden;
+      padding: 10px 0 0;
+    }
+
+    .country-strip {
+      display: flex;
+      gap: 16px;
+      width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+
+    .country-pill {
+      white-space: nowrap;
+      padding: 14px 18px;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(7,27,52,0.08);
+      border: 1px solid rgba(15,93,184,0.08);
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .country-pill span {
+      color: var(--red);
+      margin-right: 8px;
+    }
+
+    .testimonial-grid {
+      grid-template-columns: repeat(3, minmax(0,1fr));
+    }
+
+    .testimonial-card {
+      position: relative;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .stars {
+      color: #f4b400;
+      margin-bottom: 14px;
+      letter-spacing: 0.16em;
+      font-size: .95rem;
+    }
+
+    .person {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--red), var(--blue));
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .contact-grid {
+      grid-template-columns: 1.05fr .95fr;
+      align-items: start;
+    }
+
+    .info-block {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    input, textarea {
+      width: 100%;
+      border: 1px solid rgba(7,27,52,0.12);
+      border-radius: 18px;
+      padding: 16px 18px;
+      outline: none;
+      font: inherit;
+      background: #fff;
+      transition: border-color .25s ease, box-shadow .25s ease;
+    }
+
+    input:focus, textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(15,93,184,0.12);
+    }
+
+    textarea { min-height: 140px; resize: vertical; }
+
+    .map-wrap {
+      margin-top: 22px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(7,27,52,0.06);
+      min-height: 340px;
+    }
+
+    .map-wrap iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 340px;
+      border: 0;
+    }
+
+    footer {
+      padding: 28px 0 40px;
+      background: #071b34;
+      color: rgba(255,255,255,0.84);
+    }
+
+    .footer-grid {
+      grid-template-columns: 1.1fr .9fr;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: flex-end;
+      font-weight: 600;
+    }
+
+    .floating-contact {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 999;
+      display: grid;
+      gap: 12px;
+    }
+
+    .floating-contact a {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      box-shadow: 0 16px 30px rgba(7,27,52,0.25);
+      font-size: 1.4rem;
+      font-weight: 800;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .wa { background: linear-gradient(135deg, #25d366, #18a957); }
+    .tg { background: linear-gradient(135deg, #2aabee, #1279b8); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes spinReverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 16px rgba(255,255,255,0.04), 0 0 60px rgba(15,93,184,0.22), 0 0 85px rgba(215,25,32,0.18); }
+      50% { box-shadow: 0 0 0 20px rgba(255,255,255,0.05), 0 0 85px rgba(15,93,184,0.32), 0 0 110px rgba(215,25,32,0.22); }
+    }
+    @keyframes blobMove {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(22px, -16px) scale(1.08); }
+    }
+    @keyframes floatLogo {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes floatY {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .about-grid,
+      .contact-grid,
+      .footer-grid { grid-template-columns: 1fr; }
+      .services-grid,
+      .testimonial-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .menu { display: none; }
+      .hero-stats { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .services-grid,
+      .testimonial-grid,
+      .grid-2 { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .nav { min-height: 74px; }
+      .brand h1 { font-size: .88rem; }
+      .brand p { display: none; }
+      .lang-toggle { padding: 10px 12px; }
+      .cta-btn { padding: 12px 16px; }
+      section { padding: 72px 0; }
+      .hero { padding-top: 128px; }
+      .hero h2 { font-size: 2.2rem; }
+      .hero p { font-size: 1rem; }
+      .card { padding: 22px; }
+      .mini-chip { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a href="#home" class="brand">
+        <div class="brand-logo">
+          <img src="./logo.png" alt="SMP Global Logo">
+        </div>
+        <div>
+          <h1>SMP İÇ VE DIŞ TİCARET A.Ş.</h1>
+          <p data-i18n="navTag">Import • Export • Trade Logistics</p>
+        </div>
+      </a>
+
+      <nav class="menu">
+        <a href="#about" data-i18n="navAbout">About</a>
+        <a href="#services" data-i18n="navServices">Services</a>
+        <a href="#countries" data-i18n="navCountries">Countries</a>
+        <a href="#testimonials" data-i18n="navReviews">Reviews</a>
+        <a href="#contact" data-i18n="navContact">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="lang-toggle" id="langToggle">TR</button>
+        <a class="cta-btn" href="#contact" data-i18n="navQuote">Request a Quote</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <div class="eyebrow" data-i18n="eyebrow">Global import, export and operational trade support</div>
+          <h2 data-i18n="heroTitle">Reliable International Trade Infrastructure for Modern Business</h2>
+          <p data-i18n="heroText">
+            SMP Global provides end-to-end import and export coordination, supplier communication, shipment planning, trade documentation support, and cross-border business facilitation for companies operating in international markets.
+          </p>
+          <div class="hero-actions">
+            <a class="cta-btn" href="#contact" data-i18n="heroBtn1">Start Your Inquiry</a>
+            <a class="ghost-btn" href="#services" data-i18n="heroBtn2">Explore Services</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat">
+              <strong>20+</strong>
+              <span data-i18n="stat1">Trade corridors and sourcing channels supported</span>
+            </div>
+            <div class="stat">
+              <strong>24/7</strong>
+              <span data-i18n="stat2">Client communication and operational coordination</span>
+            </div>
+            <div class="stat">
+              <strong>B2B</strong>
+              <span data-i18n="stat3">Professional trade support for global partners</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal">
+          <div class="logo-orbit">
+            <div class="ring"></div>
+            <div class="ring-2"></div>
+            <div class="ring-3"></div>
+            <div class="mini-chip one" data-i18n="chip1">Trade Solutions</div>
+            <div class="mini-chip two" data-i18n="chip2">Global Sourcing</div>
+            <div class="mini-chip three" data-i18n="chip3">Export Support</div>
+            <div class="mini-chip four" data-i18n="chip4">Logistics Flow</div>
+            <div class="logo-core">
+              <div class="logo-shell">
+                <img src="./logo.png" alt="Rotating Corporate Logo" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <h3 data-i18n="aboutTitle">Professional Import and Export Partner</h3>
+            <p data-i18n="aboutText">
+              We support companies that require structured, dependable, and commercially focused trade operations. Our approach combines supplier-side coordination, export process management, documentation discipline, and timely communication across international markets.
+            </p>
+          </div>
+        </div>
+
+        <div class="about-grid">
+          <div class="card reveal">
+            <h4 data-i18n="aboutCard1Title">What We Do</h4>
+            <p data-i18n="aboutCard1Text">
+              SMP Global works with manufacturers, traders, wholesalers, and international buyers to streamline import and export workflows. We help reduce operational friction by organizing communications, shipment readiness, commercial paperwork, and market coordination.
+            </p>
+            <div class="bullet-list">
+              <div class="bullet-item">
+                <div class="bullet-icon">01</div>
+                <div>
+                  <strong data-i18n="bullet1Title">Structured Trade Execution</strong>
+                  <p data-i18n="bullet1Text">Clear process handling from inquiry stage to shipment coordination.</p>
+                </div>
+              </div>
+              <div class="bullet-item">
+                <div class="bullet-icon">02</div>
+                <div>
+                  <strong data-i18n="bullet2Title">International Communication</strong>
+                  <p data-i18n="bullet2Text">Fast communication with overseas partners, suppliers, and clients.</p>
+                </div>
+              </div>
+              <div class="bullet-item">
+                <div class="bullet-icon">03</div>
+                <div>
+                  <strong data-i18n="bullet3Title">Operational Discipline</strong>
+                  <p data-i18n="bullet3Text">Reliable follow-up on timelines, documents, and shipping readiness.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card dark reveal">
+            <h4 data-i18n="aboutCard2Title">Why Companies Choose Us</h4>
+            <p data-i18n="aboutCard2Text">
+              Our company is positioned for clients that value responsiveness, clarity, and practical execution. We focus on commercially viable markets and work across non-sanctioned countries with a disciplined, professional operating model.
+            </p>
+            <div class="info-block">
+              <div class="info-item"><span>✓</span><span data-i18n="why1">Professional bilingual communication in international trade environments</span></div>
+              <div class="info-item"><span>✓</span><span data-i18n="why2">Support for import, export, sourcing, shipping, and partner coordination</span></div>
+              <div class="info-item"><span>✓</span><span data-i18n="why3">Commercially focused workflow built for speed, trust, and continuity</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <h3 data-i18n="servicesTitle">Core Services</h3>
+            <p data-i18n="servicesText">
+              A professional import-export company is expected to present clear, commercial, and practical service lines. The sections below reflect the standard service architecture commonly used by international trade websites.
+            </p>
+          </div>
+        </div>
+
+        <div class="services-grid">
+          <div class="card service-card reveal">
+            <span class="tag" data-i18n="tag1">Import Operations</span>
+            <h4 data-i18n="service1Title">Import Management</h4>
+            <p data-i18n="service1Text">Coordination of overseas procurement, supplier alignment, shipment scheduling, and document flow to support efficient inbound trade operations.</p>
+          </div>
+          <div class="card service-card reveal">
+            <span class="tag" data-i18n="tag2">Export Operations</span>
+            <h4 data-i18n="service2Title">Export Coordination</h4>
+            <p data-i18n="service2Text">Professional support for export planning, buyer communication, cargo preparation, and transaction continuity across international destinations.</p>
+          </div>
+          <div class="card service-card reveal">
+            <span class="tag" data-i18n="tag3">Trade Documentation</span>
+            <h4 data-i18n="service3Title">Commercial Documentation Support</h4>
+            <p data-i18n="service3Text">Preparation guidance and coordination for invoices, packing lists, shipment details, and basic trade paperwork used in cross-border transactions.</p>
+          </div>
+          <div class="card service-card reveal">
+            <span class="tag" data-i18n="tag4">Supplier Network</span>
+            <h4 data-i18n="service4Title">Global Sourcing</h4>
+            <p data-i18n="service4Text">Identification and coordination of supply opportunities in commercially active and non-sanctioned markets based on client requirements.</p>
+          </div>
+          <div class="card service-card reveal">
+            <span class="tag" data-i18n="tag5">Logistics Support</span>
+            <h4 data-i18n="service5Title">Shipment & Logistics Liaison</h4>
+            <p data-i18n="service5Text">Operational assistance with shipment status follow-up, logistics communication, routing coordination, and timeline management.</p>
+          </div>
+          <div class="card service-card reveal">
+            <span class="tag" data-i18n="tag6">Client Relations</span>
+            <h4 data-i18n="service6Title">B2B Partner Communication</h4>
+            <p data-i18n="service6Text">Clear communication with clients, suppliers, and counterparties to ensure smoother trade execution and reduced misunderstanding in international deals.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="countries">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <h3 data-i18n="countriesTitle">Countries We Commonly Work With</h3>
+            <p data-i18n="countriesText">
+              We focus on commercially active, non-sanctioned trade markets frequently used in international sourcing, sales, transit, and business expansion. The list below is presented as a dynamic corporate showcase.
+            </p>
+          </div>
+        </div>
+        <div class="country-strip-wrap reveal">
+          <div class="country-strip">
+            <div class="country-pill"><span>•</span>Turkey</div>
+            <div class="country-pill"><span>•</span>United Arab Emirates</div>
+            <div class="country-pill"><span>•</span>China</div>
+            <div class="country-pill"><span>•</span>Germany</div>
+            <div class="country-pill"><span>•</span>Italy</div>
+            <div class="country-pill"><span>•</span>Netherlands</div>
+            <div class="country-pill"><span>•</span>Poland</div>
+            <div class="country-pill"><span>•</span>Spain</div>
+            <div class="country-pill"><span>•</span>France</div>
+            <div class="country-pill"><span>•</span>United Kingdom</div>
+            <div class="country-pill"><span>•</span>Qatar</div>
+            <div class="country-pill"><span>•</span>Saudi Arabia</div>
+            <div class="country-pill"><span>•</span>India</div>
+            <div class="country-pill"><span>•</span>Singapore</div>
+            <div class="country-pill"><span>•</span>Malaysia</div>
+            <div class="country-pill"><span>•</span>South Korea</div>
+            <div class="country-pill"><span>•</span>Turkey</div>
+            <div class="country-pill"><span>•</span>United Arab Emirates</div>
+            <div class="country-pill"><span>•</span>China</div>
+            <div class="country-pill"><span>•</span>Germany</div>
+            <div class="country-pill"><span>•</span>Italy</div>
+            <div class="country-pill"><span>•</span>Netherlands</div>
+            <div class="country-pill"><span>•</span>Poland</div>
+            <div class="country-pill"><span>•</span>Spain</div>
+            <div class="country-pill"><span>•</span>France</div>
+            <div class="country-pill"><span>•</span>United Kingdom</div>
+            <div class="country-pill"><span>•</span>Qatar</div>
+            <div class="country-pill"><span>•</span>Saudi Arabia</div>
+            <div class="country-pill"><span>•</span>India</div>
+            <div class="country-pill"><span>•</span>Singapore</div>
+            <div class="country-pill"><span>•</span>Malaysia</div>
+            <div class="country-pill"><span>•</span>South Korea</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimonials">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <h3 data-i18n="reviewsTitle">Client Feedback</h3>
+            <p data-i18n="reviewsText">
+              Corporate websites commonly include concise trust-building testimonials. The following reviews are formatted in a standard professional style suitable for presentation on an import-export company website.
+            </p>
+          </div>
+        </div>
+
+        <div class="testimonial-grid">
+          <div class="card testimonial-card reveal">
+            <div class="stars">★★★★★</div>
+            <p data-i18n="review1">SMP Global handled our communication and trade coordination in a very professional manner. Their response speed and operational clarity made the process much easier for our team.</p>
+            <div class="person">
+              <div class="avatar">A</div>
+              <div>
+                <strong>Ali R.</strong>
+                <div data-i18n="reviewRole1">Procurement Manager</div>
+              </div>
+            </div>
+          </div>
+          <div class="card testimonial-card reveal">
+            <div class="stars">★★★★★</div>
+            <p data-i18n="review2">We appreciated the structured support in shipment planning and supplier follow-up. The company communicates clearly and understands business expectations in international trade.</p>
+            <div class="person">
+              <div class="avatar">M</div>
+              <div>
+                <strong>Merve T.</strong>
+                <div data-i18n="reviewRole2">Export Sales Executive</div>
+              </div>
+            </div>
+          </div>
+          <div class="card testimonial-card reveal">
+            <div class="stars">★★★★★</div>
+            <p data-i18n="review3">A reliable trade partner for companies that need practical execution and disciplined communication. Their business approach is modern, efficient, and solution oriented.</p>
+            <div class="person">
+              <div class="avatar">K</div>
+              <div>
+                <strong>Khalid N.</strong>
+                <div data-i18n="reviewRole3">International Business Consultant</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <h3 data-i18n="contactTitle">Contact SMP Global</h3>
+            <p data-i18n="contactText">
+              Send your inquiry for import, export, sourcing, logistics coordination, or trade support. The contact form below is structured in a standard corporate style and includes the fields typically expected on professional B2B websites.
+            </p>
+          </div>
+        </div>
+
+        <div class="contact-grid">
+          <div class="card dark reveal">
+            <h4 data-i18n="companyTitle">Company Information</h4>
+            <p><strong>SMP İÇ VE DIŞ TİCARET ANONİM ŞİRKETİ</strong></p>
+            <div class="info-block">
+              <div class="info-item">
+                <span>📍</span>
+                <span>Nisbetiye Mah. Nisbetiye Cad. No: 24 İç Kapı No: 17 Beşiktaş / İstanbul</span>
+              </div>
+              <div class="info-item">
+                <span>📞</span>
+                <a href="tel:+905461981843">+90 (546) 198 18 43</a>
+              </div>
+              <div class="info-item">
+                <span>✉️</span>
+                <a href="mailto:smpglobal25@gmail.com">smpglobal25@gmail.com</a>
+              </div>
+              <div class="info-item">
+                <span>💬</span>
+                <a href="https://wa.me/905461981843" target="_blank">WhatsApp</a>
+                &nbsp;|&nbsp;
+                <a href="https://t.me/smpglobal25" target="_blank">Telegram</a>
+              </div>
+            </div>
+            <div class="map-wrap">
+              <iframe
+                src="https://www.google.com/maps?q=Nisbetiye%20Mah.%20Nisbetiye%20Cad.%20No%3A%2024%20%C4%B0%C3%A7%20Kap%C4%B1%20No%3A%2017%20Be%C5%9Fikta%C5%9F%20%C4%B0stanbul&z=15&output=embed"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
+          </div>
+
+          <div class="card reveal">
+            <h4 data-i18n="formTitle">Request Information</h4>
+            <form class="contact-form" onsubmit="submitForm(event)">
+              <div class="grid-2">
+                <input type="text" name="fullname" required data-placeholder="formName" placeholder="Full Name" />
+                <input type="tel" name="phone" required data-placeholder="formPhone" placeholder="Phone Number" />
+              </div>
+              <input type="email" name="email" required data-placeholder="formEmail" placeholder="Email Address" />
+              <textarea name="message" data-placeholder="formMessage" placeholder="Tell us about your trade request, sourcing need, import/export inquiry, or logistics requirement."></textarea>
+              <button class="cta-btn" type="submit" data-i18n="formBtn">Send Inquiry</button>
+              <p id="formResponse" style="margin:0;color:var(--gray);"></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <strong>SMP İÇ VE DIŞ TİCARET A.Ş.</strong>
+        <p data-i18n="footerText">Professional import, export, and international trade coordination for global business partners.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#about" data-i18n="navAbout">About</a>
+        <a href="#services" data-i18n="navServices">Services</a>
+        <a href="#countries" data-i18n="navCountries">Countries</a>
+        <a href="#contact" data-i18n="navContact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="floating-contact">
+    <a class="wa" href="https://wa.me/905461981843" target="_blank" aria-label="WhatsApp">W</a>
+    <a class="tg" href="https://t.me/smpglobal25" target="_blank" aria-label="Telegram">T</a>
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        navTag: 'Import • Export • Trade Logistics',
+        navAbout: 'About',
+        navServices: 'Services',
+        navCountries: 'Countries',
+        navReviews: 'Reviews',
+        navContact: 'Contact',
+        navQuote: 'Request a Quote',
+        eyebrow: 'Global import, export and operational trade support',
+        heroTitle: 'Reliable International Trade Infrastructure for Modern Business',
+        heroText: 'SMP Global provides end-to-end import and export coordination, supplier communication, shipment planning, trade documentation support, and cross-border business facilitation for companies operating in international markets.',
+        heroBtn1: 'Start Your Inquiry',
+        heroBtn2: 'Explore Services',
+        stat1: 'Trade corridors and sourcing channels supported',
+        stat2: 'Client communication and operational coordination',
+        stat3: 'Professional trade support for global partners',
+        chip1: 'Trade Solutions',
+        chip2: 'Global Sourcing',
+        chip3: 'Export Support',
+        chip4: 'Logistics Flow',
+        aboutTitle: 'Professional Import and Export Partner',
+        aboutText: 'We support companies that require structured, dependable, and commercially focused trade operations. Our approach combines supplier-side coordination, export process management, documentation discipline, and timely communication across international markets.',
+        aboutCard1Title: 'What We Do',
+        aboutCard1Text: 'SMP Global works with manufacturers, traders, wholesalers, and international buyers to streamline import and export workflows. We help reduce operational friction by organizing communications, shipment readiness, commercial paperwork, and market coordination.',
+        bullet1Title: 'Structured Trade Execution',
+        bullet1Text: 'Clear process handling from inquiry stage to shipment coordination.',
+        bullet2Title: 'International Communication',
+        bullet2Text: 'Fast communication with overseas partners, suppliers, and clients.',
+        bullet3Title: 'Operational Discipline',
+        bullet3Text: 'Reliable follow-up on timelines, documents, and shipping readiness.',
+        aboutCard2Title: 'Why Companies Choose Us',
+        aboutCard2Text: 'Our company is positioned for clients that value responsiveness, clarity, and practical execution. We focus on commercially viable markets and work across non-sanctioned countries with a disciplined, professional operating model.',
+        why1: 'Professional bilingual communication in international trade environments',
+        why2: 'Support for import, export, sourcing, shipping, and partner coordination',
+        why3: 'Commercially focused workflow built for speed, trust, and continuity',
+        servicesTitle: 'Core Services',
+        servicesText: 'A professional import-export company is expected to present clear, commercial, and practical service lines. The sections below reflect the standard service architecture commonly used by international trade websites.',
+        tag1: 'Import Operations',
+        service1Title: 'Import Management',
+        service1Text: 'Coordination of overseas procurement, supplier alignment, shipment scheduling, and document flow to support efficient inbound trade operations.',
+        tag2: 'Export Operations',
+        service2Title: 'Export Coordination',
+        service2Text: 'Professional support for export planning, buyer communication, cargo preparation, and transaction continuity across international destinations.',
+        tag3: 'Trade Documentation',
+        service3Title: 'Commercial Documentation Support',
+        service3Text: 'Preparation guidance and coordination for invoices, packing lists, shipment details, and basic trade paperwork used in cross-border transactions.',
+        tag4: 'Supplier Network',
+        service4Title: 'Global Sourcing',
+        service4Text: 'Identification and coordination of supply opportunities in commercially active and non-sanctioned markets based on client requirements.',
+        tag5: 'Logistics Support',
+        service5Title: 'Shipment & Logistics Liaison',
+        service5Text: 'Operational assistance with shipment status follow-up, logistics communication, routing coordination, and timeline management.',
+        tag6: 'Client Relations',
+        service6Title: 'B2B Partner Communication',
+        service6Text: 'Clear communication with clients, suppliers, and counterparties to ensure smoother trade execution and reduced misunderstanding in international deals.',
+        countriesTitle: 'Countries We Commonly Work With',
+        countriesText: 'We focus on commercially active, non-sanctioned trade markets frequently used in international sourcing, sales, transit, and business expansion. The list below is presented as a dynamic corporate showcase.',
+        reviewsTitle: 'Client Feedback',
+        reviewsText: 'Corporate websites commonly include concise trust-building testimonials. The following reviews are formatted in a standard professional style suitable for presentation on an import-export company website.',
+        review1: 'SMP Global handled our communication and trade coordination in a very professional manner. Their response speed and operational clarity made the process much easier for our team.',
+        reviewRole1: 'Procurement Manager',
+        review2: 'We appreciated the structured support in shipment planning and supplier follow-up. The company communicates clearly and understands business expectations in international trade.',
+        reviewRole2: 'Export Sales Executive',
+        review3: 'A reliable trade partner for companies that need practical execution and disciplined communication. Their business approach is modern, efficient, and solution oriented.',
+        reviewRole3: 'International Business Consultant',
+        contactTitle: 'Contact SMP Global',
+        contactText: 'Send your inquiry for import, export, sourcing, logistics coordination, or trade support. The contact form below is structured in a standard corporate style and includes the fields typically expected on professional B2B websites.',
+        companyTitle: 'Company Information',
+        formTitle: 'Request Information',
+        formName: 'Full Name',
+        formPhone: 'Phone Number',
+        formEmail: 'Email Address',
+        formMessage: 'Tell us about your trade request, sourcing need, import/export inquiry, or logistics requirement.',
+        formBtn: 'Send Inquiry',
+        footerText: 'Professional import, export, and international trade coordination for global business partners.'
+      },
+      tr: {
+        navTag: 'İthalat • İhracat • Ticaret Lojistiği',
+        navAbout: 'Hakkımızda',
+        navServices: 'Hizmetler',
+        navCountries: 'Ülkeler',
+        navReviews: 'Yorumlar',
+        navContact: 'İletişim',
+        navQuote: 'Teklif Al',
+        eyebrow: 'Küresel ithalat, ihracat ve operasyonel ticaret desteği',
+        heroTitle: 'Modern İş Dünyası İçin Güvenilir Uluslararası Ticaret Altyapısı',
+        heroText: 'SMP Global, uluslararası pazarlarda faaliyet gösteren şirketler için uçtan uca ithalat ve ihracat koordinasyonu, tedarikçi iletişimi, sevkiyat planlaması, ticari evrak desteği ve sınır ötesi iş kolaylaştırma hizmetleri sunar.',
+        heroBtn1: 'Talebinizi Başlatın',
+        heroBtn2: 'Hizmetleri İnceleyin',
+        stat1: 'Desteklenen ticaret koridorları ve tedarik kanalları',
+        stat2: 'Müşteri iletişimi ve operasyon koordinasyonu',
+        stat3: 'Küresel iş ortakları için profesyonel ticaret desteği',
+        chip1: 'Ticaret Çözümleri',
+        chip2: 'Küresel Tedarik',
+        chip3: 'İhracat Desteği',
+        chip4: 'Lojistik Akışı',
+        aboutTitle: 'Profesyonel İthalat ve İhracat Ortağı',
+        aboutText: 'Yapılandırılmış, güvenilir ve ticari odaklı dış ticaret operasyonlarına ihtiyaç duyan şirketlere destek veriyoruz. Yaklaşımımız; tedarikçi koordinasyonu, ihracat süreç yönetimi, evrak disiplini ve uluslararası pazarlarda zamanında iletişimi bir araya getirir.',
+        aboutCard1Title: 'Ne Yapıyoruz',
+        aboutCard1Text: 'SMP Global; üreticiler, tüccarlar, toptancılar ve uluslararası alıcılarla çalışarak ithalat ve ihracat süreçlerini daha verimli hale getirir. İletişim, sevkiyata hazırlık, ticari evraklar ve pazar koordinasyonunu organize ederek operasyonel yükü azaltırız.',
+        bullet1Title: 'Yapılandırılmış Ticaret Yürütme',
+        bullet1Text: 'Talep aşamasından sevkiyat koordinasyonuna kadar net süreç yönetimi.',
+        bullet2Title: 'Uluslararası İletişim',
+        bullet2Text: 'Yurtdışı iş ortakları, tedarikçiler ve müşterilerle hızlı iletişim.',
+        bullet3Title: 'Operasyon Disiplini',
+        bullet3Text: 'Terminler, evraklar ve sevkiyat hazırlığı için güvenilir takip.',
+        aboutCard2Title: 'Neden Bizi Tercih Ediyorlar',
+        aboutCard2Text: 'Şirketimiz; hızlı geri dönüş, netlik ve pratik uygulamaya değer veren müşteriler için konumlanmıştır. Ticari açıdan uygun pazarlara odaklanır, yaptırım dışı ülkelerde disiplinli ve profesyonel bir çalışma modeliyle hizmet veririz.',
+        why1: 'Uluslararası ticaret ortamında profesyonel iki dilli iletişim',
+        why2: 'İthalat, ihracat, tedarik, sevkiyat ve iş ortağı koordinasyonu desteği',
+        why3: 'Hız, güven ve sürdürülebilirlik için ticari odaklı iş akışı',
+        servicesTitle: 'Temel Hizmetler',
+        servicesText: 'Profesyonel bir ithalat-ihracat şirketi, net, ticari ve uygulanabilir hizmet başlıkları sunmalıdır. Aşağıdaki bölümler, uluslararası ticaret sitelerinde yaygın olarak kullanılan standart hizmet yapısını yansıtır.',
+        tag1: 'İthalat Operasyonları',
+        service1Title: 'İthalat Yönetimi',
+        service1Text: 'Verimli ithalat operasyonları için yurtdışı satın alma, tedarikçi uyumu, sevkiyat planlaması ve evrak akışının koordinasyonu.',
+        tag2: 'İhracat Operasyonları',
+        service2Title: 'İhracat Koordinasyonu',
+        service2Text: 'Uluslararası destinasyonlara yönelik ihracat planlaması, alıcı iletişimi, yük hazırlığı ve işlem sürekliliği için profesyonel destek.',
+        tag3: 'Ticari Evraklar',
+        service3Title: 'Ticari Dokümantasyon Desteği',
+        service3Text: 'Fatura, paketleme listesi, sevkiyat detayları ve sınır ötesi işlemlerde kullanılan temel ticari evraklar için hazırlık ve koordinasyon desteği.',
+        tag4: 'Tedarik Ağı',
+        service4Title: 'Küresel Tedarik',
+        service4Text: 'Müşteri ihtiyaçlarına göre ticari açıdan aktif ve yaptırım dışı pazarlarda tedarik fırsatlarının belirlenmesi ve koordine edilmesi.',
+        tag5: 'Lojistik Desteği',
+        service5Title: 'Sevkiyat ve Lojistik Koordinasyonu',
+        service5Text: 'Sevkiyat durumu takibi, lojistik iletişimi, rota koordinasyonu ve zaman çizelgesi yönetiminde operasyonel destek.',
+        tag6: 'Müşteri İlişkileri',
+        service6Title: 'B2B İş Ortağı İletişimi',
+        service6Text: 'Uluslararası işlemlerde daha sorunsuz yürütme ve daha az yanlış anlama için müşteriler, tedarikçiler ve muhataplarla net iletişim.',
+        countriesTitle: 'Sık Çalıştığımız Ülkeler',
+        countriesText: 'Uluslararası tedarik, satış, transit ve iş geliştirme süreçlerinde sık kullanılan, ticari açıdan aktif ve yaptırım dışı pazarlara odaklanıyoruz. Aşağıdaki liste dinamik bir kurumsal sunum olarak hazırlanmıştır.',
+        reviewsTitle: 'Müşteri Geri Bildirimleri',
+        reviewsText: 'Kurumsal sitelerde genellikle kısa ve güven artırıcı müşteri yorumları yer alır. Aşağıdaki yorumlar, ithalat-ihracat şirketi web sitesi için uygun profesyonel bir formatta hazırlanmıştır.',
+        review1: 'SMP Global, iletişim ve ticaret koordinasyonumuzu son derece profesyonel şekilde yönetti. Hızlı geri dönüşleri ve operasyonel netlikleri ekibimiz için süreci çok daha kolay hale getirdi.',
+        reviewRole1: 'Satın Alma Müdürü',
+        review2: 'Sevkiyat planlaması ve tedarikçi takibindeki yapılandırılmış desteklerini çok değerli bulduk. Şirket net iletişim kuruyor ve uluslararası ticarette iş beklentilerini iyi anlıyor.',
+        reviewRole2: 'İhracat Satış Yöneticisi',
+        review3: 'Pratik uygulama ve disiplinli iletişim isteyen şirketler için güvenilir bir ticaret partneri. İş yaklaşımları modern, verimli ve çözüm odaklı.',
+        reviewRole3: 'Uluslararası İş Danışmanı',
+        contactTitle: 'SMP Global ile İletişime Geçin',
+        contactText: 'İthalat, ihracat, tedarik, lojistik koordinasyonu veya ticaret desteği taleplerinizi gönderin. Aşağıdaki form, profesyonel B2B sitelerde beklenen standart kurumsal yapı ile hazırlanmıştır.',
+        companyTitle: 'Şirket Bilgileri',
+        formTitle: 'Bilgi Talebi',
+        formName: 'Ad Soyad',
+        formPhone: 'Telefon Numarası',
+        formEmail: 'E-posta Adresi',
+        formMessage: 'Ticaret talebinizi, tedarik ihtiyacınızı, ithalat/ihracat sorunuz veya lojistik gereksiniminizi yazın.',
+        formBtn: 'Talep Gönder',
+        footerText: 'Küresel iş ortakları için profesyonel ithalat, ihracat ve uluslararası ticaret koordinasyonu.'
+      }
+    };
+
+    let currentLang = 'en';
+
+    function applyTranslations(lang) {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) el.textContent = translations[lang][key];
+      });
+      document.querySelectorAll('[data-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-placeholder');
+        if (translations[lang][key]) el.placeholder = translations[lang][key];
+      });
+      document.getElementById('langToggle').textContent = lang === 'en' ? 'TR' : 'EN';
+      document.title = lang === 'en' ? 'SMP Global | Import & Export Solutions' : 'SMP Global | İthalat ve İhracat Çözümleri';
+    }
+
+    document.getElementById('langToggle').addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'tr' : 'en';
+      applyTranslations(currentLang);
+    });
+
+    function submitForm(event) {
+      event.preventDefault();
+      const msg = currentLang === 'en'
+        ? 'Your inquiry has been noted. Connect this form to your email service or backend to receive messages directly.'
+        : 'Talebiniz kaydedildi. Mesajları doğrudan almak için bu formu e-posta servisinize veya backend sisteminize bağlayın.';
+      document.getElementById('formResponse').textContent = msg;
+      event.target.reset();
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    applyTranslations(currentLang);
+  </script>
+</body>
+</html>
